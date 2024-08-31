@@ -31,6 +31,3 @@ class AuthService(UserDataLayer):
         return {"message": "Login successful", "user": user.email}
 
 
-if __name__ == '__main__':
-    nog = AuthService(connection_string=Authentication.USERS_CONNECTION_STRING)
-    print(nog.log_in(email="nogaha", password="hi"))

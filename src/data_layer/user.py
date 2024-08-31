@@ -18,3 +18,4 @@ class UserDataLayer(SqlDBDataLayer):
         self.session.add(new_user)
         self.session.commit()
         return new_user
+
