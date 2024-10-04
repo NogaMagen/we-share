@@ -1,17 +1,17 @@
+from functools import lru_cache
+
 from passlib.hash import bcrypt
 from pydantic import EmailStr
 
 from data_layer.user import UserDataLayer
-from settings.consts import Authentication
-from functools import lru_cache
 
 
 class AuthService(UserDataLayer):
     def __init__(self, connection_string: str):
         super().__init__(connection_string)
 
-    def sign_up(self, email: EmailStr | None, password: str) -> dict:
-        fetched_user = self.get_user_email(email=email)
+    def sign_up(self, email: EmailStr | None, password: str | None) -> dict:
+        fetched_user = self.get_user_by_email(email=email)
         if fetched_user:
             return {"error": "email already registered"}
 
@@ -20,8 +20,8 @@ class AuthService(UserDataLayer):
         return {"message": "User created", "user": new_user.email}
 
     @lru_cache(maxsize=None)
-    def log_in(self, email: EmailStr, password: str) -> dict:
-        user = self.get_user_email(email)
+    def log_in(self, email: EmailStr, password: str | None) -> dict:
+        user = self.get_user_by_email(email)
         if not user:
             return {"error": "User not found"}
 
@@ -29,5 +29,3 @@ class AuthService(UserDataLayer):
             return {"error": "Invalid credentials"}
 
         return {"message": "Login successful", "user": user.email}
-
-
